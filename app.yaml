@@ -8,5 +8,5 @@ handlers:
   script: convertsy.py
 
 - url: /assets
-  static_dir: essets
+  static_dir: assets
 

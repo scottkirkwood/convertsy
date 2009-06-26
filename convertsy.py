@@ -4,6 +4,7 @@
 from waveapi import events
 from waveapi import model
 from waveapi import robot
+import converter
 
 def OnParticipantsChanged(properties, context):
   """Invoked when any participants have been added/removed."""
@@ -20,11 +21,22 @@ def Notify(context):
   root_wavelet = context.GetRootWavelet()
   root_wavelet.CreateBlip().GetDocument().SetText("Hi everybody!")
 
+def OnBlipChanged(properties, context):
+  blip = context.GetBlipById(properties['blipId'])
+  text = blip.GetDocument().GetText()
+  blip.GetDocument().SetText(converter.Converter(text))
+
+def trace(msg, context):
+  """Output trace info to blip"""
+  root_wavelet = context.GetRootWavelet()
+  root_wavelet.CreateBlip().GetDocument().SetText("convertsy trace: %s" % msg)
+
 if __name__ == '__main__':
   myRobot = robot.Robot('convertsy', 
       image_url='http://convertsy.appspot.com/icon.png',
-      version='1',
+      version='4',
       profile_url='http://convertsy.appspot.com/')
   myRobot.RegisterHandler(events.WAVELET_PARTICIPANTS_CHANGED, OnParticipantsChanged)
   myRobot.RegisterHandler(events.WAVELET_SELF_ADDED, OnRobotAdded)
-  myRobot.Run()
+  myRobot.RegisterHandler(events.BLIP_SUBMITTED, OnBlipChanged)
+  myRobot.Run(debug=True)
