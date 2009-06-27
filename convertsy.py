@@ -6,6 +6,12 @@ from waveapi import model
 from waveapi import robot
 import converter
 
+WELCOME_TEXT = """Hi, I'm convertsy.
+Type '123 km (? miles)' to convert to miles. 
+Also 'R$123.00 ($ ?)' to convert Reais to US dollars.
+Also '123 km/h (? mph)' to convert from kph to mph.
+"""
+
 def OnParticipantsChanged(properties, context):
   """Invoked when any participants have been added/removed."""
   added = properties['participantsAdded']
@@ -15,16 +21,25 @@ def OnParticipantsChanged(properties, context):
 def OnRobotAdded(properties, context):
   """Invoked when the robot has been added."""
   root_wavelet = context.GetRootWavelet()
-  root_wavelet.CreateBlip().GetDocument().SetText("I'm alive!")
+  root_wavelet.CreateBlip().GetDocument().SetText(WELCOME_TEXT)
 
 def Notify(context):
   root_wavelet = context.GetRootWavelet()
-  root_wavelet.CreateBlip().GetDocument().SetText("Hi everybody!")
+  #root_wavelet.CreateBlip().GetDocument().SetText("Hi everybody!")
 
 def OnBlipChanged(properties, context):
   blip = context.GetBlipById(properties['blipId'])
   text = blip.GetDocument().GetText()
-  blip.GetDocument().SetText(converter.Converter(text))
+  newtext = converter.Converter(text) 
+  if newtext != text:
+    blip.GetDocument().SetText(newtext)
+
+def DocumentChanged(properties, context):
+  blip = context.GetBlipById(properties['blipId'])
+  text = blip.GetDocument().GetText()
+  newtext = converter.Converter(text) 
+  if newtext != text:
+    blip.GetDocument().SetText(newtext)
 
 def trace(msg, context):
   """Output trace info to blip"""
@@ -34,9 +49,10 @@ def trace(msg, context):
 if __name__ == '__main__':
   myRobot = robot.Robot('convertsy', 
       image_url='http://convertsy.appspot.com/icon.png',
-      version='4',
+      version='1',
       profile_url='http://convertsy.appspot.com/')
   myRobot.RegisterHandler(events.WAVELET_PARTICIPANTS_CHANGED, OnParticipantsChanged)
   myRobot.RegisterHandler(events.WAVELET_SELF_ADDED, OnRobotAdded)
   myRobot.RegisterHandler(events.BLIP_SUBMITTED, OnBlipChanged)
+  myRobot.RegisterHandler(events.DOCUMENT_CHANGED, DocumentChanged)
   myRobot.Run(debug=True)
