@@ -15,30 +15,31 @@ def PrefixConverter(conversion_fn):
   def PrefixConvertFn(match):
     from_type, space1, from_num, space2, to_type, space3 = match.groups()
     to_num = '%0.2f' % conversion_fn(from_type, to_type, float(from_num))
-    return '%(PREFIX)s%(SPACE1)s%(REAL)s%(SPACE2)s(%(TO)s%(SPACE3)s%(USD)s)' % dict(
-        PREFIX=from_type, SPACE1=space1, SPACE2=space2, SPACE3=space3, REAL=from_num, 
-        TO=to_type, USD=to_num)
+    return '%(FROM_TYPE)s%(SPACE1)s%(FROM_NUM)s%(SPACE2)s(%(TO_TYPE)s%(SPACE3)s%(TO_NUM)s)' % dict(
+        FROM_TYPE=from_type, SPACE1=space1, SPACE2=space2, SPACE3=space3, FROM_NUM=from_num, 
+        TO_TYPE=to_type, TO_NUM=to_num)
   return PrefixConvertFn
 
 def PrefixConvert(text, re_from, re_to, conversion_fn):
   re_str = r'(%(FROM)s)(%(SPACES)s)(%(FLOAT)s)(%(SPACES)s)\((%(TO)s)(%(SPACES)s)%(QUESTS)s\)' % dict(
       FROM=re_from, TO=re_to, SPACES=OPTSPACES, FLOAT=FLOAT, QUESTS=QUESTS)
-  re_real = re.compile(re_str)
-  return re_real.sub(PrefixConverter(conversion_fn), text)
+  re_find = re.compile(re_str)
+  return re_find.sub(PrefixConverter(conversion_fn), text)
 
 def PostfixConverter(conversion_fn):
   def PostfixConvertFn(match):
     from_num, space1, from_type, space2, space3, to_type = match.groups()
     to_num = '%0.2f' % conversion_fn(from_type, to_type, float(from_num))
-    return '%(KM)s%(SPACE1)s%(POST)s%(SPACE2)s(%(MILES)s%(SPACE3)s%(TO)s)' % dict(
-        KM=from_num, POST=from_type, MILES=to_num, TO=to_type, SPACE1=space1, SPACE2=space2, SPACE3=space3)
+    return '%(FROM_NUM)s%(SPACE1)s%(FROM_TYPE)s%(SPACE2)s(%(TO_NUM)s%(SPACE3)s%(TO_TYPE)s)' % dict(
+        FROM_NUM=from_num, FROM_TYPE=from_type, TO_NUM=to_num, TO_TYPE=to_type, 
+        SPACE1=space1, SPACE2=space2, SPACE3=space3)
   return PostfixConvertFn
 
 def PostfixConvert(text, re_from, re_to, conversion_fn):
   re_str = r'(%(FLOAT)s)(%(SPACES)s)(%(FROM)s)(%(SPACES)s)\(%(QUESTS)s(%(SPACES)s)(%(TO)s)\)' % dict(
       FROM=re_from, TO=re_to, SPACES=OPTSPACES, FLOAT=FLOAT, QUESTS=QUESTS)
-  re_km = re.compile(re_str)
-  return re_km.sub(PostfixConverter(conversion_fn), text)
+  re_find = re.compile(re_str)
+  return re_find.sub(PostfixConverter(conversion_fn), text)
 
 def InvertFn(fn):
   def InvertedFn(from_type, to_type, num):
