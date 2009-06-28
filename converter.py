@@ -18,11 +18,11 @@ def NumSigFigs(num_str):
 def SameSigFigs(num, sig_figs):
   dec = decimal.Decimal(str(num))
   decimals = '1'
-  new = dec.quantize(decimal.Decimal(decimals))
+  new = dec.quantize(decimal.Decimal(decimals), rounding=decimal.ROUND_HALF_UP)
   decimals += '.'
   while NumSigFigs(str(new)) < sig_figs or (math.fabs(num - float(new)) / num) > 0.1:
     decimals += '0'
-    new = dec.quantize(decimal.Decimal(decimals))
+    new = dec.quantize(decimal.Decimal(decimals), rounding=decimal.ROUND_HALF_UP)
   return str(new) 
 
 def PrefixConverter(conversion_fn):
@@ -107,6 +107,12 @@ def KgConvert(from_type, to_type, from_num):
 def ConvertKg(text):
   return PostfixConverters(text, r'[Kk]g|kilograms?', r'lbs?|lbs?\.|pounds?', KgConvert)
 
+def LiterConvert(from_type, to_type, from_num):
+  return 0.2642 * from_num
+
+def ConvertLiter(text):
+  return PostfixConverters(text, r'[Ll]|litres?|liters?', r'gals?|gallons?|gals?\.', LiterConvert)
+
 def Converter(text):
   text = ConvertReais(text)
   text = ConvertKm(text)
@@ -114,5 +120,6 @@ def Converter(text):
   text = ConvertCelcius(text)
   text = ConvertCm(text)
   text = ConvertKg(text)
+  text = ConvertLiter(text)
   return text
 

@@ -58,6 +58,10 @@ class ConverterTest(unittest.TestCase):
     self.TestConvert('100kg (220lbs)', '100kg (?lbs)', converter.ConvertKg)
     self.TestConvert('220 pounds (100 Kg)', '220 pounds (? Kg)', converter.ConvertKg)
 
+  def testLitres(self):
+    self.TestConvert('100 L (26.4 gal)', '100 L (? gal)', converter.ConvertLiter)
+    self.TestConvert('100 gal. (379l)', '100 gal. (?l)', converter.ConvertLiter)
+
   def testNumFigs(self):
     self.assertEquals(4, converter.NumSigFigs('0.123'))
     self.assertEquals(0, converter.NumSigFigs(''))
@@ -70,8 +74,14 @@ class ConverterTest(unittest.TestCase):
      self.assertEquals('1.23', converter.SameSigFigs(1.23, 3))
      self.assertEquals('1.230', converter.SameSigFigs(1.23, 4))
      self.assertEquals('123', converter.SameSigFigs(123.45, 1))
-     self.assertEquals('123.4', converter.SameSigFigs(123.45, 4))
+     self.assertEquals('123.5', converter.SameSigFigs(123.45, 4))
     
+  def testSameSigFigs_extraPrecision(self):
+     self.assertEquals('1', converter.SameSigFigs(1.11, 1))
+     self.assertEquals('1.2', converter.SameSigFigs(1.24, 1))
+     self.assertEquals('1.3', converter.SameSigFigs(1.25, 1))
+     self.assertEquals('1.3', converter.SameSigFigs(1.29, 1))
+
 if __name__ == '__main__':
   unittest.main()
 
