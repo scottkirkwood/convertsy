@@ -70,6 +70,7 @@ def CmConvert(from_type, to_type, from_num):
 
 def ConvertCm(text):
   return PostfixConverters(text, r'cm|centimeters?', r'"|inch(?:es)?', CmConvert)
+
 def ConvertKph(text):
   return PostfixConverters(text, r'[Kk]m/h|kph', r'[Mm]ph|miles? per hour', KmConvert)
 
@@ -85,11 +86,18 @@ def ConvertCelcius(text):
   text = PostfixConvert(text, c_regex, f_regex, CelsiusToF)
   return PostfixConvert(text, f_regex, c_regex, FToCelsius) 
 
+def KgConvert(from_type, to_type, from_num):
+  return 2.20462262 * from_num
+
+def ConvertKg(text):
+  return PostfixConverters(text, r'[Kk]g|kilograms?', r'lbs?|lbs?\.|pounds?', KgConvert)
+
 def Converter(text):
   text = ConvertReais(text)
   text = ConvertKm(text)
   text = ConvertKph(text)
   text = ConvertCelcius(text)
   text = ConvertCm(text)
+  text = ConvertKg(text)
   return text
 

@@ -54,6 +54,10 @@ class ConverterTest(unittest.TestCase):
     self.TestConvert('2.54cm (1.00")', '2.54cm (?")', converter.ConvertCm)
     self.TestConvert('1 inch (2.54 centimeters)', '1 inch (? centimeters)', converter.ConvertCm)
 
+  def testCentimeters(self):
+    self.TestConvert('100kg (220.46lbs)', '100kg (?lbs)', converter.ConvertKg)
+    self.TestConvert('220 pounds (99.79 Kg)', '220 pounds (? Kg)', converter.ConvertKg)
+
 if __name__ == '__main__':
   unittest.main()
 
