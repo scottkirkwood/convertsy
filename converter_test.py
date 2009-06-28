@@ -58,6 +58,15 @@ class ConverterTest(unittest.TestCase):
     self.TestConvert('100kg (220.46lbs)', '100kg (?lbs)', converter.ConvertKg)
     self.TestConvert('220 pounds (99.79 Kg)', '220 pounds (? Kg)', converter.ConvertKg)
 
+  def testNumFigs(self):
+    self.assertEquals(4, converter.NumSigFigs('0.123'))
+    self.assertEquals(0, converter.NumSigFigs(''))
+    self.assertEquals(2, converter.NumSigFigs('12'))
+    self.assertEquals(3, converter.NumSigFigs('.123'))
+
+  def testSameSigFigs(self):
+     pass
+    
 if __name__ == '__main__':
   unittest.main()
 

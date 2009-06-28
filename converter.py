@@ -4,11 +4,20 @@
 #
 # Copyright 2009 Google Inc. All Rights Reserved.
 
+import decimal
 import re
 
 FLOAT = r'[-+]?[0-9]*\.?[0-9]+'
 QUESTS = r'\?+'
 OPTSPACES = r'\s*'
+
+def NumSigFigs(num_str):
+  if not num_str:
+    return 0
+  return len(num_str.replace('.', ''))
+
+def SameSigFigs(num, sig_figs):
+  return decimal(str(num))
 
 def PrefixConverter(conversion_fn):
   def PrefixConvertFn(match):
