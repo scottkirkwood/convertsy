@@ -5,7 +5,6 @@
 # Copyright 2009 Google Inc. All Rights Reserved.
 
 import re
-import unittest
 
 FLOAT = r'[-+]?[0-9]*\.?[0-9]+'
 QUESTS = r'\?+'
@@ -94,49 +93,3 @@ def Converter(text):
   text = ConvertCm(text)
   return text
 
-def TestConvert(expected, test, fn):
-  converted = fn(test)
-  if converted != expected:
-    print 'original  %r' % test
-    print 'converted %r' % converted
-    print 'expected  %r' % expected
-    assert(False)
-  TestGeneralConverter(expected, test)
-
-def TestGeneralConverter(expected, test):
-  converted = Converter(test)
-  if converted != expected:
-    print '**** General converter issue ****'
-    print 'original  %r' % test
-    print 'converted %r' % converted
-    print 'expected  %r' % expected
-    assert(False)
-
-def Tests():
-  TestConvert('R$ 1.00 ($0.52)', 'R$ 1.00 ($?)', ConvertReais)
-  TestConvert('R$-1.00 ($-0.52)', 'R$-1.00 ($??)', ConvertReais)
-  TestConvert('R$1($0.52)', 'R$1($?)', ConvertReais)
-  TestConvert('It costs R$ 1.00 ($ 0.52) here', 'It costs R$ 1.00 ($ ?) here', ConvertReais)
-
-  TestConvert('1.23km (0.76 miles)', '1.23km (? miles)', ConvertKm)
-  TestConvert('1 mile (1.61 km)', '1 mile (? km)', ConvertKm)
-  TestConvert('-1.23km (-0.76 miles)', '-1.23km (? miles)', ConvertKm)
-  TestConvert('test 1 km (0.62 miles)', 'test 1 km (? miles)', ConvertKm)
-  TestConvert('test 1 km (bob miles)', 'test 1 km (bob miles)', ConvertKm)
-
-  TestConvert('test 1 km (0.62 miles)', 'test 1 km (? miles)', ConvertKm)
-  TestConvert('R$ 1.00 ($0.52)', 'R$ 1.00 ($0.52)', ConvertReais)
-
-  TestConvert('100kph (62.14 mph)', '100kph (? mph)', ConvertKph)
-  TestConvert('100mph (160.93 kph)', '100mph (? kph)', ConvertKph)
-  TestConvert('100 km/h (62.14 mph)', '100 km/h (? mph)', ConvertKph)
-  TestConvert(' BRL$1.00 (USD$ 0.52)', ' BRL$1.00 (USD$ ?)', ConvertReais)
-
-  TestConvert('100F (37.78C)', '100F (?C)', ConvertCelcius)
-  TestConvert('100°C (212.00°F)', '100°C (?°F)', ConvertCelcius)
-
-  TestConvert('2.54cm (1.00")', '2.54cm (?")', ConvertCm)
-  TestConvert('1 inch (2.54 centimeters)', '1 inch (? centimeters)', ConvertCm)
-
-if __name__ == '__main__':
-  Tests()
