@@ -114,6 +114,8 @@ def ConvertLiter(text):
   return PostfixConverters(text, r'[Ll]|litres?|liters?', r'gals?|gallons?|gals?\.', LiterConvert)
 
 def Converter(text):
+  if text and text.startswith('Hi, I\'m convertsy'):
+    return text
   text = ConvertReais(text)
   text = ConvertKm(text)
   text = ConvertKph(text)

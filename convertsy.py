@@ -7,9 +7,13 @@ from waveapi import robot
 import converter
 
 WELCOME_TEXT = """Hi, I'm convertsy.
-Type '123 km (?&nbsp;miles)' to convert to miles. 
-Also 'R$123.00 ($&nbsp;?)' to convert Reais to US dollars.
-Also '123 km/h (?&nbsp;mph)' to convert from kph to mph.
+Type '123 km (? miles)' to convert to miles (and vice-versa). 
+Also 'R$123.00 ($ ?)' to convert Reais to US dollars.
+I can convert:
+  kg Kg <-> lbs pounds
+  liters L l <-> gallons gal gal.
+  cm <-> inches "
+  celsius C <-> fahrenheit F
 """
 
 def OnParticipantsChanged(properties, context):
@@ -49,7 +53,7 @@ def trace(msg, context):
 if __name__ == '__main__':
   myRobot = robot.Robot('convertsy', 
       image_url='http://convertsy.appspot.com/icon.png',
-      version='3',
+      version='2',
       profile_url='http://convertsy.appspot.com/')
   myRobot.RegisterHandler(events.WAVELET_PARTICIPANTS_CHANGED, OnParticipantsChanged)
   myRobot.RegisterHandler(events.WAVELET_SELF_ADDED, OnRobotAdded)
