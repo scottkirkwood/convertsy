@@ -1,10 +1,9 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-
 #
-# Copyright 2009 Google Inc. All Rights Reserved.
 
 import decimal
+import math
 import re
 
 FLOAT = r'[-+]?[0-9]*\.?[0-9]+'
@@ -17,12 +16,19 @@ def NumSigFigs(num_str):
   return len(num_str.replace('.', ''))
 
 def SameSigFigs(num, sig_figs):
-  return decimal(str(num))
+  dec = decimal.Decimal(str(num))
+  decimals = '1'
+  new = dec.quantize(decimal.Decimal(decimals))
+  decimals += '.'
+  while NumSigFigs(str(new)) < sig_figs or (math.fabs(num - float(new)) / num) > 0.1:
+    decimals += '0'
+    new = dec.quantize(decimal.Decimal(decimals))
+  return str(new) 
 
 def PrefixConverter(conversion_fn):
   def PrefixConvertFn(match):
     from_type, space1, from_num, space2, to_type, space3 = match.groups()
-    to_num = '%0.2f' % conversion_fn(from_type, to_type, float(from_num))
+    to_num = SameSigFigs(conversion_fn(from_type, to_type, float(from_num)), NumSigFigs(from_num))
     return '%(FROM_TYPE)s%(SPACE1)s%(FROM_NUM)s%(SPACE2)s(%(TO_TYPE)s%(SPACE3)s%(TO_NUM)s)' % dict(
         FROM_TYPE=from_type, SPACE1=space1, SPACE2=space2, SPACE3=space3, FROM_NUM=from_num, 
         TO_TYPE=to_type, TO_NUM=to_num)
@@ -37,7 +43,7 @@ def PrefixConvert(text, re_from, re_to, conversion_fn):
 def PostfixConverter(conversion_fn):
   def PostfixConvertFn(match):
     from_num, space1, from_type, space2, space3, to_type = match.groups()
-    to_num = '%0.2f' % conversion_fn(from_type, to_type, float(from_num))
+    to_num = SameSigFigs(conversion_fn(from_type, to_type, float(from_num)), NumSigFigs(from_num))
     return '%(FROM_NUM)s%(SPACE1)s%(FROM_TYPE)s%(SPACE2)s(%(TO_NUM)s%(SPACE3)s%(TO_TYPE)s)' % dict(
         FROM_NUM=from_num, FROM_TYPE=from_type, TO_NUM=to_num, TO_TYPE=to_type, 
         SPACE1=space1, SPACE2=space2, SPACE3=space3)
