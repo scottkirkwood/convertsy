@@ -53,7 +53,7 @@ def trace(msg, context):
 if __name__ == '__main__':
   myRobot = robot.Robot('convertsy', 
       image_url='http://convertsy.appspot.com/icon.png',
-      version='2',
+      version='1',
       profile_url='http://convertsy.appspot.com/')
   myRobot.RegisterHandler(events.WAVELET_PARTICIPANTS_CHANGED, OnParticipantsChanged)
   myRobot.RegisterHandler(events.WAVELET_SELF_ADDED, OnRobotAdded)

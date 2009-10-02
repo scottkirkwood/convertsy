@@ -1,5 +1,4 @@
 #!/usr/bin/python
-# -*- coding: utf-8 -*-
 #
 
 import decimal
@@ -96,8 +95,8 @@ def FToCelsius(from_type, to_type, from_num):
   return (5. / 9) * (from_num - 32.0)
 
 def ConvertCelcius(text):
-  c_regex = r'[Cc]|[C]elsius|°C'
-  f_regex = r'[Ff]|[Ff]ahrenheit|°F'
+  c_regex = r'[Cc]|[C]elsius'
+  f_regex = r'[Ff]|[Ff]ahrenheit'
   text = PostfixConvert(text, c_regex, f_regex, CelsiusToF)
   return PostfixConvert(text, f_regex, c_regex, FToCelsius) 
 

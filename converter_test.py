@@ -1,6 +1,4 @@
 #!/usr/bin/python
-# -*- coding: utf-8 -*-
-#
 # Copyright 2009 Google Inc. All Rights Reserved.
 import unittest
 import converter
@@ -48,7 +46,6 @@ class ConverterTest(unittest.TestCase):
 
   def testCelsius(self):
     self.TestConvert('100F (37.8C)', '100F (?C)', converter.ConvertCelcius)
-    self.TestConvert('100°C (212°F)', '100°C (?°F)', converter.ConvertCelcius)
 
   def testCentimeters(self):
     self.TestConvert('2.54cm (1.00")', '2.54cm (?")', converter.ConvertCm)
